@@ -5,8 +5,7 @@ const path=require('path')
 //=> 
 
 app.get('^/$|index(.html)?',(req,res)=>{
- 
-  
+
     res.sendFile(path.join(__dirname,'..','views','root.html'))
 
 })
