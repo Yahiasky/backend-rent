@@ -5,8 +5,7 @@ const path=require('path')
 //=> 
 
 app.get('^/$|index(.html)?',(req,res)=>{
-    console.log(`\n ${req.url} \n`)
-    connection_MySQL.query(`INSERT INTO access (  URL, METHOD) VALUES ( '${req.url}','${req.method}' );`)
+ 
     res.sendFile(path.join(__dirname,'..','views','root.html'))
 
 })
