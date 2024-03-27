@@ -87,8 +87,8 @@ app.use('/clients',require('./routes/APIs/clients.js'))
 //* listen
 app.listen(PORT,()=>console.log(`server runnig on port : ${PORT}`))
 //*error
-// app.use((err,req,res,next)=>{
+app.use((err,req,res,next)=>{
+  console.log(`server log in from URL : ${req.URL} `)
 
-//     connection_MySQL.query(`INSERT INTO error ( idErrType, errContent) VALUES ( '500','${err.stack}' );`)
    
-// })
+})
