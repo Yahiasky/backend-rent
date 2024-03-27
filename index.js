@@ -88,7 +88,7 @@ app.use('/clients',require('./routes/APIs/clients.js'))
 app.listen(PORT,()=>console.log(`server runnig on port : ${PORT}`))
 //*error
 app.use((err,req,res,next)=>{
-  console.log(`server log in from URL : ${req.URL} `)
+    console.log(`server log in from URL : ${req.url} `)
 
    
 })
