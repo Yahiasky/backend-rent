@@ -34,7 +34,7 @@ app.use(cookieParser())
 //*static files 
 app.use('/',express.static(path.join(__dirname,'public')))
 app.use('/users',express.static(path.join(__dirname,'public')))
-app.use('/deletedUsers',express.static(path.join(__dirname,'public')))
+
 
 
 //* routes
@@ -50,19 +50,12 @@ app.use('/login',require('./routes/APIs/Login.js'))
 app.use('/register',require('./routes/APIs/register.js'))
 app.use('/logout',require('./routes/APIs/logout.js'))
 
-app.use('/AccessToken',require('./routes/APIs/AccessToken.js'))
+// app.use('/AccessToken',require('./routes/APIs/AccessToken.js'))
 
 
 // app.use(verifyJwt)
 
-app.use('/clients',require('./routes/APIs/clients.js'))
-//!searchByUsername/searchByJoinedDate/searchByEmail get-method
-//! blockedClients get-method
-//! unblockedClients get-method
-//! clientStatus/:idUser  get-method
-//! blockClient/:idUser  post-method
-//! unblockClient/:idUser post-method
-//! clientHistory/:idUser  get-method
+app.use('/users',require('./routes/APIs/users.js'))
 
 
 
