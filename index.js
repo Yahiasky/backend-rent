@@ -57,7 +57,7 @@ app.use('/logout',require('./routes/APIs/logout.js'))
 
 app.use('/users',require('./routes/APIs/users.js'))
 
-
+app.use('/filters',require('./routes/APIs/filters.js'))
 
 
 

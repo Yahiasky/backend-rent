@@ -12,7 +12,7 @@ var register=async (req,res)=>{
 
        const bcrypt=require('bcrypt')
        const hashedPassword= await bcrypt.hash( req.body.password,10)
-       var idUser=require('crypto').randomBytes(30).toString('hex').toUpperCase()
+       var idUser=require('crypto').randomBytes(10).toString('hex').toUpperCase()
 
 
      if  (!req.body.username  || !req.body.email || 

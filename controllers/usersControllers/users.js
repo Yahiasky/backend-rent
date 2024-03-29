@@ -1,5 +1,5 @@
 const connection_MySQL=require('../../MySql/connect')
-var {log} =require('../../functions/log')
+
 
 
 
@@ -17,9 +17,8 @@ var getUsers=async (req,res)=>{
 var getUser=async(req,res)=>{
 
   
-    
-   const data=await connection_MySQL.query(`SELECT * FROM User where idUser = '${req.params.idUser}' ;`)
-   var [FinalData]=data
+   const data=await connection_MySQL.query(`SELECT * FROM User where idUser ='${req.params.idUser}' ;`)
+   var [FinalData]=data[0]
   return FinalData==null ? res.sendStatus(204) :res.json(FinalData)
    
 
