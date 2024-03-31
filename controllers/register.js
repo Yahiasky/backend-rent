@@ -22,11 +22,14 @@ var register=async (req,res)=>{
     var [Users]=await connection_MySQL.query(`select * from User `)
     const usernameExist=Users.find(user=>user.username==req.body.username)
     if(usernameExist) return res.status(400).json({"message":`${req.body.username} is already exist`})
-
+     
 
     await connection_MySQL
     .query(`INSERT INTO User ( username, email, hashedPassword,joinedDate,idUser)
      VALUES ( ?,? ,?,?,? );`,[req.body.username,req.body.email,hashedPassword,format(new Date(),'yyyy-MM-dd  HH:mm:ss'),idUser])
+     if(req.body.phoneNumber) 
+     await connection_MySQL.query(`update User set phoneNumber ='${req.body.phoneNumber}' where idUser='${req.params.idUser}'`)
+
     return res.status(201).json({"message":"created"})
 //     const transporter=nodemailer.createTransport({
 //       service:process.env.nodemailer_service,
