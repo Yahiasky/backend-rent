@@ -78,10 +78,10 @@ app.use('/filters',require('./routes/APIs/filters.js'))
 
 
 //* listen
-app.listen(PORT,()=>console.log(`server runnig on port : ${PORT}`))
+app.listen(PORT,()=>console.log(`server running on port : ${PORT}`))
 //*error
-app.use((err,req,res,next)=>{
-    console.log(`server log in from URL : ${req.originalUrl} `)
+// app.use((err,req,res,next)=>{
+//     console.log(`server log in from URL : ${req.originalUrl} `)
 
    
-})
+// })
