@@ -20,6 +20,18 @@ var updateUser=async(req,res)=>{
         await connection_MySQL.query(`update User set username ='${req.body.newUsername}' where idUser='${req.params.idUser}'`)
         updates.push('username updated')
     }
+    if(req.body.gender){
+        await connection_MySQL.query(`update User set gender ='${req.body.gender}' where idUser='${req.params.idUser}'`)
+        updates.push('gender updated')
+    }
+    if(req.body.phoneNumber){
+        await connection_MySQL.query(`update User set phoneNumber ='${req.body.phoneNumber}' where idUser='${req.params.idUser}'`)
+        updates.push('phoneNumber updated')
+    }
+    if(req.body.birthDate){
+        await connection_MySQL.query(`update User set birthDate ='${req.body.birthDate}' where idUser='${req.params.idUser}'`)
+        updates.push('birthDate updated')
+    }
     if(req.body.newEmail){
         if(!validator.isEmail(req.body.newEmail)) return res.status(400).json({"message":`${req.body.newEmail} is not valid email`})
         await connection_MySQL.query(`update User set email ='${req.body.newEmail}' where idUser='${req.params.idUser}'`)
