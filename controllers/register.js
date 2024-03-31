@@ -27,7 +27,7 @@ var register=async (req,res)=>{
     await connection_MySQL
     .query(`INSERT INTO User ( username, email, hashedPassword,joinedDate,idUser)
      VALUES ( ?,? ,?,?,? );`,[req.body.username,req.body.email,hashedPassword,format(new Date(),'yyyy-MM-dd  HH:mm:ss'),idUser])
-    return res.sendStatus(201)
+    return res.status(201).json({"message":"created"})
 //     const transporter=nodemailer.createTransport({
 //       service:process.env.nodemailer_service,
 //       auth:{
