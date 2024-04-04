@@ -1,26 +1,23 @@
 
-const mysql=require('mysql2');
-const { DATABASE_HOST, USER, PASSWORD, DATABASE_NAME } = require('../data/info');
+
+
 require('dotenv').config()
 
-let msg;
-try{
- var connection=mysql.createPool({
-    host:DATABASE_HOST,
-    user:USER,
-    password:PASSWORD,
-    database:DATABASE_NAME
-}).promise()
-msg=  'connected'
+const { Client } = require("pg");
+const {DATABASE_URL}=require('./../data/info')
+const connection = new Client(DATABASE_URL);
 
-}
-catch(errr){
-    msg='connection failed'
-    connection.query(`INSERT INTO error ( typeErr, contentErr) VALUES ( '500','${errr}' );`)
-}
-finally{
-    console.log(` My Sql :${msg}`)  
-}
+(async () => {
+  await connection.connect();
+  try {
+    
+    console.log('MySQL connected');
+  } catch (err) {
+    console.error("error executing query",err);
+  }
+})();
+
+
 
 
 module.exports=connection

@@ -16,19 +16,19 @@ var register=async (req,res)=>{
 
 
      if  (!req.body.name  || !req.body.email || 
-       !req.body.password || req.body.password.length<8 || req.body.username.length<2)  return res.sendStatus(400)
+       !req.body.password || req.body.password.length<8 || req.body.name.length<2)  return res.sendStatus(400)
 
     if(!validator.isEmail(req.body.email)) return res.status(400).json({"message":`${req.body.email} is not valid email`})
-    var [Users]=await connection_MySQL.query(`select * from User `)
-    const usernameExist=Users.find(user=>user.username==req.body.name)
+    var Users=await connection_MySQL.query(`select * from "User" `)
+    const usernameExist=Users.rows.find(user=>user.username==req.body.name)
     if(usernameExist) return res.status(400).json({"message":`${req.body.name} is already exist`})
      
-
+    
     await connection_MySQL
-    .query(`INSERT INTO User ( username, email, hashedPassword,joinedDate,idUser)
-     VALUES ( ?,? ,?,?,? );`,[req.body.name,req.body.email,hashedPassword,format(new Date(),'yyyy-MM-dd  HH:mm:ss'),idUser])
+    .query(`INSERT INTO "User"(username, email, hashedPassword,joinedDate,idUser)
+     VALUES ('${req.body.name}','${req.body.email}' ,'${hashedPassword}','${format(new Date(),'yyyy-MM-dd  HH:mm:ss')}','${idUser}');`)
      if(req.body.phoneNumber) 
-     await connection_MySQL.query(`update User set phoneNumber =${+req.body.phoneNumber} where idUser='${idUser}'`)
+     await connection_MySQL.query(`update "User" set phoneNumber =${+req.body.phoneNumber} where idUser='${idUser}'`)
 
     return res.status(201).json({"message":"created"})
 //     const transporter=nodemailer.createTransport({
