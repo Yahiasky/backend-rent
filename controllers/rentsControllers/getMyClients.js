@@ -1,0 +1,52 @@
+const connection_MySQL=require('../../MySql/connect')
+let {format}=require('date-fns')
+
+
+var getMCs=async(req,res)=>{
+    if(!req.params.idUser) return res.status(400).json({"message":"idUser missing"})
+
+    var userProps=await connection_MySQL.query(`select idApartment from apartment where idUser='${req.params.idUser}'`)
+   
+    var userRents=[]
+    for(var i =0;i<userProps.rows.length;i++) {
+        const rentsForOneApp=await connection_MySQL.query(`select * from rent
+                                                 where idapartment='${userProps.rows[i].idapartment}'`)
+                                               
+        rentsForOneApp.rows.map(e=>userRents.push(e))
+    
+       }
+     
+
+    var userRentsFullData=[]
+    for(var i =0;i<userRents.length;i++) {
+           const ClientData=await connection_MySQL.query(`select username,contact from "User"
+                                                    where iduser='${userRents[i].iduser}'`)
+           const clientRate=await connection_MySQL.query(`SELECT AVG(value) FROM rateClient,rent 
+                                                    where rent.idUser ='${userRents[i].iduser}'
+                                                     and rateClient.idRent=rent.idRent ;`)
+           const PropsData=await connection_MySQL.query(`select title,description from apartment
+                                                    where idapartment='${userRents[i].idapartment}'`)
+           const PropAVG=await connection_MySQL.query(`select AVG(value) from rent,review 
+                                                    where rent.idrent=review.idrent and idapartment='${userRents[i].idapartment}'`)
+           const pics= await connection_MySQL.query(`select pic_url from picture
+                                                    where idapartment='${userRents[i].idapartment}'`)
+                                                  
+        userRentsFullData.push({rentDate:userRents[i].rentdate,
+            rentPeriod:userRents[i].rentPeriod,
+            price:userRents[i].price,
+            ...(ClientData.rows[0]),
+            clientRate:clientRate.rows[0].avg,
+            ...(PropsData.rows[0]),
+            PropAVG:PropAVG.rows[0].avg,
+            picture:(pics.rows[0]['pic_url'])})
+       
+          }
+              
+          
+    console.log(userRentsFullData)
+
+    
+     return res.sendStatus(200)
+
+}
+module.exports={getMCs}
