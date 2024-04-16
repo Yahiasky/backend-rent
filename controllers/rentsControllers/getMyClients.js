@@ -10,7 +10,7 @@ var getMCs=async(req,res)=>{
     var userRents=[]
     for(var i =0;i<userProps.rows.length;i++) {
         const rentsForOneApp=await connection_MySQL.query(`select * from rent
-                                                 where idapartment='${userProps.rows[i].idapartment}'`)
+                                                 where idapartment='${userProps.rows[i].idapartment}' and status='approved'`)
                                                
         rentsForOneApp.rows.map(e=>userRents.push(e))
     
@@ -19,6 +19,10 @@ var getMCs=async(req,res)=>{
 
     var userRentsFullData=[]
     for(var i =0;i<userRents.length;i++) {
+        const rentRated=await connection_MySQL.query(`select * from rateclient where idrent='${userRents[i].idrent}'`)
+        
+        if(rentRated.rows[0] || (new Date(userRents[i].enddate))>(new Date())) continue
+  
            const ClientData=await connection_MySQL.query(`select username,contact from "User"
                                                     where iduser='${userRents[i].iduser}'`)
            const clientRate=await connection_MySQL.query(`SELECT AVG(value) FROM rateClient,rent 
@@ -30,9 +34,11 @@ var getMCs=async(req,res)=>{
                                                     where rent.idrent=review.idrent and idapartment='${userRents[i].idapartment}'`)
            const pics= await connection_MySQL.query(`select pic_url from picture
                                                     where idapartment='${userRents[i].idapartment}'`)
-                                                  
-        userRentsFullData.push({rentDate:userRents[i].rentdate,
-            rentPeriod:userRents[i].rentPeriod,
+                                        
+        userRentsFullData.push({
+            idRent:userRents[i].idrent,
+            rentDate:userRents[i].rentdate,
+            enddate:userRents[i].enddate,
             price:userRents[i].price,
             ...(ClientData.rows[0]),
             clientRate:clientRate.rows[0].avg,
@@ -43,10 +49,10 @@ var getMCs=async(req,res)=>{
           }
               
           
-    console.log(userRentsFullData)
+    
 
     
-     return res.sendStatus(200)
+     return res.json(userRentsFullData)
 
 }
 module.exports={getMCs}

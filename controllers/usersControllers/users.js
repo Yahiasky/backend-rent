@@ -19,7 +19,7 @@ var getUser=async(req,res)=>{
 
    
     const rateAVG_asClient=await connection_MySQL.query(`SELECT AVG(value) FROM rateClient,rent 
-    where rent.idUser ='${req.params.idUser}' and rateClient.idRent=rent.idRent ;`)
+    where rent.idUser ='${req.params.idUser}' and rateClient.idRent=rent.idRent and status='approved' ;`)
 
    var userProps=await connection_MySQL.query(`select idApartment from apartment where idUser='${req.params.idUser}'`)
 
@@ -28,7 +28,7 @@ var getUser=async(req,res)=>{
    var  userPropsAVG=[]
    for(var i =0;i<userProps.length;i++) {
     const PropAVG=await connection_MySQL.query(`select AVG(value) from rent,review 
-                                             where rent.idrent=review.idrent and idapartment='${userProps[i]}'`)
+                                             where rent.idrent=review.idrent and idapartment='${userProps[i]}' and status='approved'`)
     if(PropAVG.rows[0].avg) userPropsAVG.push(+PropAVG.rows[0].avg)
    
 
