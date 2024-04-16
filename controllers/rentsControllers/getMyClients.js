@@ -31,7 +31,8 @@ var getMCs=async(req,res)=>{
            const PropsData=await connection_MySQL.query(`select title,description from apartment
                                                     where idapartment='${userRents[i].idapartment}'`)
            const PropAVG=await connection_MySQL.query(`select AVG(value) from rent,review 
-                                                    where rent.idrent=review.idrent and idapartment='${userRents[i].idapartment}'`)
+                                                    where rent.idrent=review.idrent and idapartment='${userRents[i].idapartment}'
+                                                    and status='approved'`)
            const pics= await connection_MySQL.query(`select pic_url from picture
                                                     where idapartment='${userRents[i].idapartment}'`)
                                         
