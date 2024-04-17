@@ -22,7 +22,7 @@ var register=async (req,res)=>{
     var Users=await connection_MySQL.query(`select * from "User" `)
     const emailExist=Users.rows.find(user=>user.email==req.body.email)
     if(emailExist) return res.status(400).json({"message":`${req.body.email} is already exist`})
-    const phoneExist=Users.rows.find(user=>user.phonenumber==req.body.phoneNumber)
+    const phoneExist=Users.rows.find(user=>(user.phonenumber)==(req.body.phoneNumber))
     if(phoneExist) return res.status(400).json({"message":`${req.body.phoneNumber} is already exist`})
      
     
