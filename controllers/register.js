@@ -20,8 +20,10 @@ var register=async (req,res)=>{
 
     if(!validator.isEmail(req.body.email)) return res.status(400).json({"message":`${req.body.email} is not valid email`})
     var Users=await connection_MySQL.query(`select * from "User" `)
-    const usernameExist=Users.rows.find(user=>user.username==req.body.name)
-    if(usernameExist) return res.status(400).json({"message":`${req.body.name} is already exist`})
+    const emailExist=Users.rows.find(user=>user.email==req.body.email)
+    if(emailExist) return res.status(400).json({"message":`${req.body.email} is already exist`})
+    const phoneExist=Users.rows.find(user=>user.phonenumber==req.body.phoneNumber)
+    if(phoneExist) return res.status(400).json({"message":`${req.body.phoneNumber} is already exist`})
      
     
     await connection_MySQL

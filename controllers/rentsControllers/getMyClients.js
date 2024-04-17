@@ -1,5 +1,6 @@
 const connection_MySQL=require('../../MySql/connect')
 let {format}=require('date-fns')
+const getPropAVG = require('../../functions/getPropAVG')
 
 
 var getMCs=async(req,res)=>{
@@ -30,9 +31,7 @@ var getMCs=async(req,res)=>{
                                                      and rateClient.idRent=rent.idRent  and status='approved' ;`)
            const PropsData=await connection_MySQL.query(`select title,description from apartment
                                                     where idapartment='${userRents[i].idapartment}'`)
-           const PropAVG=await connection_MySQL.query(`select AVG(value) from rent,review 
-                                                    where rent.idrent=review.idrent and idapartment='${userRents[i].idapartment}'
-                                                    and status='approved'`)
+           const PropAVG=await getPropAVG(userRents[i].idapartment)
            const pics= await connection_MySQL.query(`select pic_url from picture
                                                     where idapartment='${userRents[i].idapartment}'`)
                                         
@@ -44,7 +43,7 @@ var getMCs=async(req,res)=>{
             ...(ClientData.rows[0]),
             clientRate:clientRate.rows[0].avg,
             ...(PropsData.rows[0]),
-            PropAVG:PropAVG.rows[0].avg,
+            PropAVG:PropAVG,
             picture:(pics.rows[0]['pic_url'])})
        
           }
