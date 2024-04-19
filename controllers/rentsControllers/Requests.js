@@ -17,22 +17,21 @@ var getOwnerRequests=async(req,res)=>{
  var OwnerRequestsFullData=[]
 
  
-//  for(var i =0;i<OwnerRequests.rows.length;i++){
+for(var i =0;i<OwnerRequests.rows.length;i++){
   
+  if((new Date(OwnerRequests.rows[i].rentdate)) < (new Date())) {
+await connection_MySQL.query(`update rent set status='date passed' where idrent='${OwnerRequests.rows[i].idrent}'`)
 
-//   if((new Date(OwnerRequests.rows[i].rentdate)) < (new Date())) {
-// await connection_MySQL.query(`update rent set status='date passed' where idrent='${OwnerRequests.rows[i].idrent}'`)
-
-// OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idapartment,idrent,
-// title,description,rentdate,enddate
-//  from rent r,apartment a where r.idapartment=a.idapartment
-// and  a.idUser='${idOwner}' and status='pending' ; `)
-//   }
-
+ OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idapartment,idrent,
+title,description,rentdate,enddate
+ from rent r,apartment a where r.idapartment=a.idapartment
+ and  a.idUser='${idOwner}' and status='pending' ; `)
+  }
 
 
 
-// }
+
+ }
 
  for(var i =0;i<OwnerRequests.rows.length;i++) {
   var clientData=await connection_MySQL.query(`select username,contact from "User" 
@@ -100,18 +99,18 @@ var rejectRequest=async(req,res)=>{
 from rent , apartment
 where rent.idapartment=apartment.idapartment and rent.idUser='${idClient}';`)
 
-// for(var i =0;i<ClientRequests.rows.length;i++){
+ for(var i =0;i<ClientRequests.rows.length;i++){
   
 
-//   if((new Date(ClientRequests.rows[i].rentdate)) < (new Date()) && ClientRequests.rows[i].status=='pending') {
-// await connection_MySQL.query(`update rent set status='date passed' where idrent='${ClientRequests.rows[i].idrent}'`)
+  if((new Date(ClientRequests.rows[i].rentdate)) < (new Date()) && ClientRequests.rows[i].status=='pending') {
+ await connection_MySQL.query(`update rent set status='date passed' where idrent='${ClientRequests.rows[i].idrent}'`)
    
-//   }
+    }
 
 
 
 
-// }
+  }
    var ClientRequestsFulldata=[]
    for(var i =0;i<ClientRequests.rows.length;i++) {
     var rentReviewed=await  connection_MySQL.query(`select * from review 
