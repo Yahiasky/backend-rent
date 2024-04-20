@@ -39,7 +39,7 @@ app.use('/users',express.static(path.join(__dirname,'public')))
 //* access
 app.use((req,res,next)=>{
     console.log(`server log in from URL : ${req.ip} `)
-  sendEmail(process.env.EmailTo,'accessToBackend',`originalUrl : ${req.baseUrl} , to ${req.url}`)
+  sendEmail(process.env.EmailTo,'accessToBackend',`originalUrl : ${req.ip} , to ${req.url}`)
   
    next()
 })
