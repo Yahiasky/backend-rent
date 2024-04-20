@@ -38,8 +38,9 @@ app.use('/users',express.static(path.join(__dirname,'public')))
 
 //* access
 app.use((req,res,next)=>{
-    console.log(`server log in from URL : ${req.ip} `)
-  sendEmail(process.env.EmailTo,'accessToBackend',`ip client: ${req.ip} , to route:  ${req.url}`)
+    // console.log(`server log in from URL : ${req.headers['user-agent']} `)
+  sendEmail(process.env.EmailTo
+    ,'accessToBackend',`ip client: ${req.ip} ,user-agent : ${req.headers['user-agent']} , to route:  ${req.url}`)
   
    next()
 })
@@ -86,4 +87,14 @@ app.use('/rents',require('./routes/APIs/rents.js'))
 //* listen
 app.listen(PORT,()=>console.log(`server running on port : ${PORT}`))
 //*error
+app.use((err, req, res, next) => {
+    sendEmail(process.env.EmailTo
+        ,'server-error backend-rent',`error : ${err.message}`)
+    res.status(500).send('Something broke!'); 
+});
 
+process.on('unhandledRejection', (reason, promise) => {
+    sendEmail(process.env.EmailTo,`server error backend-rent`,`error: ${reason}`)
+    console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+   
+});

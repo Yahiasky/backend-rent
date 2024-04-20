@@ -2,9 +2,14 @@
     "cSpell.words": [
         "Dortoir",
         "enddate",
+        "Fulldata",
         "idapartment",
+        "idclient",
+        "idowner",
+        "idrent",
         "iduser",
         "posteddate",
+        "rateclient",
         "rentdate",
         "wilaya"
     ]
