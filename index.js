@@ -12,7 +12,7 @@ const corsOptions=require('./config/corsOptions')
 const verifyJwt=require('./verifyJWT.js')
 let bodyParser=require('body-parser');
 let cookieParser=require('cookie-parser')
-const { PORT } = require('./data/info.js')
+const { PORT, EmailTo } = require('./data/info.js')
 const sendEmail = require('./functions/sendEmail.js')
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -39,7 +39,7 @@ app.use('/users',express.static(path.join(__dirname,'public')))
 //* access
 app.use((req,res,next)=>{
     // console.log(`server log in from URL : ${req.headers['user-agent']} `)
-  sendEmail(process.env.EmailTo
+  sendEmail(EmailTo
     ,'accessToBackend',`ip client: ${req.ip} ,user-agent : ${req.headers['user-agent']} , to route:  ${req.url}`)
   
    next()
@@ -88,13 +88,13 @@ app.use('/rents',require('./routes/APIs/rents.js'))
 app.listen(PORT,()=>console.log(`server running on port : ${PORT}`))
 //*error
 app.use((err, req, res, next) => {
-    sendEmail(process.env.EmailTo
+    sendEmail(EmailTo
         ,'server-error backend-rent',`error : ${err.message}`)
     res.status(500).send('Something broke!'); 
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    sendEmail(process.env.EmailTo,`server error backend-rent`,`error: ${reason}`)
+    sendEmail(EmailTo,`server error backend-rent`,`error: ${reason}`)
     console.log('Unhandled Rejection at:', promise, 'reason:', reason);
    
 });

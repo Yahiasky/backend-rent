@@ -1,11 +1,12 @@
 const nodemailer=require('nodemailer')
+const { Email, Email_password, nodemailer_service } = require('../data/info')
    
  var sendEmail=async(EmailTo,Subject,Text)=>{
     const transporter=nodemailer.createTransport({
-        service:process.env.nodemailer_service,
+        service:nodemailer_service,
         auth:{
-            user:process.env.Email,
-            pass:process.env.Email_password
+            user:Email,
+            pass:Email_password
         },
         debug: true
      })
@@ -14,7 +15,7 @@ const nodemailer=require('nodemailer')
      
      
      const mailOption={
-        from:process.env.Email,
+        from:Email,
         to:EmailTo,
         subject:Subject,
         text:Text
