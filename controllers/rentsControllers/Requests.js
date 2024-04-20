@@ -1,6 +1,7 @@
 const connection_MySQL=require('../../MySql/connect')
 let {format}=require('date-fns')
 const getPropAVG = require('../../functions/getPropAVG')
+const { getClientRate } = require('../../functions/getUserAVG')
 
 
 var getOwnerRequests=async(req,res)=>{
@@ -37,23 +38,18 @@ title,description,rentdate,enddate
   var clientData=await connection_MySQL.query(`select username,contact from "User" 
   where idUser='${OwnerRequests.rows[i].idclient}'`)
 
-  const clientRate=await connection_MySQL.query(`SELECT AVG(value) FROM rateClient,rent 
-                                                    where rent.idUser ='${OwnerRequests.rows[i].idclient}'
-                                                     and rateClient.idRent=rent.idRent  and status='approved' ;`)
+  const clientRate=await getClientRate(OwnerRequests.rows[i].idclient)
 
 
 
-  const PropAVG=await connection_MySQL.query(`select AVG(value) from rent,review 
-                                                     where rent.idrent=review.idrent 
-                                                     and idapartment='${OwnerRequests.rows[i].idapartment}'
-                                                     and status='approved'`)
+  const PropAVG=await getPropAVG(OwnerRequests.rows[i].idapartment)
   const pics= await connection_MySQL.query(`select pic_url from picture where idapartment='${OwnerRequests.rows[i].idapartment}'`)
                                                      
   OwnerRequestsFullData.push({
    ...(clientData.rows[0]),
-   clientRate:clientRate.rows[0].avg,
+   clientRate:clientRate,
    ...(OwnerRequests.rows[i]),
-   PropertyRate:PropAVG.rows[0].avg,
+   PropertyRate:PropAVG,
    picture:pics.rows[0]['pic_url']
 
 
