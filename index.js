@@ -40,7 +40,7 @@ app.use('/users',express.static(path.join(__dirname,'public')))
 app.use((req,res,next)=>{
     // console.log(`server log in from URL : ${req.headers['user-agent']} `)
   sendEmail(EmailTo
-    ,'accessToBackend',`ip client: ${req.ip} ,user-agent : ${req.headers['user-agent']} , to route:  ${req.url}`)
+    ,'accessToBackend',`ip client: ${req.ip} ,user-agent : ${req.headers['user-agent']} , to route:  ${req.originalUrl}`)
   
    next()
 })
