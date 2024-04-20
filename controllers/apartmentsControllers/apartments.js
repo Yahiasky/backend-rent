@@ -1,6 +1,7 @@
 const connection_MySQL=require('../../MySql/connect')
 let {format}=require('date-fns')
 const getPropAVG = require('../../functions/getPropAVG')
+const getPropPics = require('../../functions/getPropPictures')
 var HouseCategories=['Dortoir','Bungalow','villa','apartment']
 
 
@@ -8,14 +9,16 @@ var getPropsById=async(req,res)=>{
     const data=await connection_MySQL.query(`SELECT * FROM apartment where idapartment ='${req.params.idProperty}' ;`)
     
     let FinalData=[]
-  
-      const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
-        from rent where idapartment='${data.rows[0].idapartment}' and status='approved'; `)
-        const PropAVG=await getPropAVG(data.rows[0].idapartment)
-        const pics= await connection_MySQL.query(`select pic_url from picture
-                                                  where idapartment='${data.rows[0].idapartment}'`)
-         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics.rows[0]['pic_url']),bookDates:bookDates.rows})
-       
+
+    const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
+    from rent where idapartment='${data.rows[0].idapartment}' and status='approved'; `)
+    const PropAVG=await getPropAVG(data.rows[0].idapartment)
+    const pics= await getPropPics(data.rows[0].idapartment)
+     FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics),bookDates:bookDates.rows})
+   
+    
+ 
+    
     
     
    return res.json(FinalData)
@@ -31,9 +34,8 @@ var getPropsByUserId=async(req,res)=>{
     let FinalData=[]
     for(var i =0;i<data.rows.length;i++) {
         const PropAVG=await getPropAVG(data.rows[i].idapartment)
-        const pics= await connection_MySQL.query(`select pic_url from picture
-                                                  where idapartment='${data.rows[i].idapartment}'`)
-         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics.rows[0]['pic_url'])})
+        const pics= await getPropPics(data.rows[0].idapartment)
+         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics)})
        
     
        }
@@ -149,8 +151,8 @@ var updates=[]
    const newProp=await connection_MySQL.query(`select * from apartment where idapartment='${req.params.idProperty}'`)
    
     var updatesToString=updates.join('/')
-    
-   return res.status(200).json({message:updatesToString,newProp:newProp.rows[0]})
+    const PropAvg=await getPropAVG(req.params.idProperty)
+   return res.status(200).json({message:updatesToString,newProp:{...newProp.rows[0],avg:PropAvg}})
  
     
     

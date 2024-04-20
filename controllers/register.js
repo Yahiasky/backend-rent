@@ -1,9 +1,9 @@
 const connection_MySQL=require('../MySql/connect')
 var validator=require('validator')
 let {format}=require('date-fns')
-const nodemailer=require('nodemailer')
+
 require('dotenv').config()
-const uuid=require('uuid')
+
 
 
 
@@ -33,45 +33,7 @@ var register=async (req,res)=>{
      await connection_MySQL.query(`update "User" set phoneNumber =${+req.body.phoneNumber} where idUser='${idUser}'`)
 
     return res.status(201).json({"message":"created"})
-//     const transporter=nodemailer.createTransport({
-//       service:process.env.nodemailer_service,
-//       auth:{
-//           user:process.env.Email,
-//           pass:process.env.Email_password
-//       },
-//       debug: true
-//    })
-    
-  
-//    const verificationCode=require('crypto').randomBytes(3).toString('hex').toUpperCase()
-   
-//    const mailOption={
-//       from:process.env.Email,
-//       to:req.body.email,
-//       subject:'email verification',
-//       text:`your verification code is ${verificationCode}`
-//    }
-  
 
-//    try{
-//       await  transporter.sendMail(mailOption)
-//       var userInfo={
-//         username:req.body.username,
-//         email:req.body.email,
-//         password:req.body.password
-//       }
-//       var hash=await bcrypt.hash(verificationCode,10)
-//       res.cookie('userInfo',userInfo,{httpOnly:true,maxAge:60*60*1000})
-//       res.cookie('verCode',hash,{httpOnly:true,maxAge:60*60*1000})
-//  console.log(verificationCode)
-//       return res.sendStatus(201)
-  
- 
-//    }
-//   catch(err){
-//   console.log(err)
-//       return res.sendStatus(500)
-//   }
 
     
     

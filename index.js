@@ -13,6 +13,7 @@ const verifyJwt=require('./verifyJWT.js')
 let bodyParser=require('body-parser');
 let cookieParser=require('cookie-parser')
 const { PORT } = require('./data/info.js')
+const sendEmail = require('./functions/sendEmail.js')
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
@@ -35,11 +36,16 @@ app.use(cookieParser())
 app.use('/',express.static(path.join(__dirname,'public')))
 app.use('/users',express.static(path.join(__dirname,'public')))
 
+//* access
+app.use((req,res,next)=>{
+    console.log(`server log in from URL : ${req.ip} `)
+  sendEmail(process.env.EmailTo,'accessToBackend',`originalUrl : ${req.baseUrl} , to ${req.url}`)
+  
+   next()
+})
 
 
 //* routes
-
-
 
 
 
@@ -80,8 +86,4 @@ app.use('/rents',require('./routes/APIs/rents.js'))
 //* listen
 app.listen(PORT,()=>console.log(`server running on port : ${PORT}`))
 //*error
-// app.use((err,req,res,next)=>{
-//     console.log(`server log in from URL : ${req.originalUrl} `)
 
-   
-// })

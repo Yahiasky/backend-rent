@@ -1,5 +1,7 @@
 const connection_MySQL=require('../../MySql/connect')
 const getPropAVG = require('../../functions/getPropAVG')
+const getPropPics = require('../../functions/getPropPictures')
+const sendEmail = require('../../functions/sendEmail')
 
 
 var getPropsByWilaya=async(req,res)=>{
@@ -10,13 +12,13 @@ var getPropsByWilaya=async(req,res)=>{
         const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
         from rent where idapartment='${data.rows[i].idapartment}' and status='approved'; `)
         const PropAVG=await getPropAVG(data.rows[i].idapartment)
-         const pics= await connection_MySQL.query(`select pic_url from picture
-                                                  where idapartment='${data.rows[i].idapartment}'`)
-         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics.rows[0]['pic_url']),bookDates:bookDates.rows})
+        let pics= await getPropPics(data.rows[i].idapartment)
+         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics),bookDates:bookDates.rows})
        
     
        }
-   return FinalData==null ? res.sendStatus(204) :res.json(FinalData)
+    sendEmail('yahiakasmi19@gmail.com','test','test')
+   return !FinalData ? res.sendStatus(204) :res.json(FinalData)
   
 
 
