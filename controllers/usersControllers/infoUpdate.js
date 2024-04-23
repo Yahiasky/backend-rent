@@ -24,6 +24,8 @@ var updateUser=async(req,res)=>{
         updates.push('gender updated')
     }
     if(req.body.phoneNumber){
+    const phoneExist=Users.rows.find(user=>(user.phonenumber)==(req.body.phoneNumber))
+    if(phoneExist) return res.status(400).json({"message":`${req.body.phoneNumber} is already exist`})
         await connection_MySQL.query(`update "User" set phoneNumber ='${req.body.phoneNumber}' where idUser='${req.params.idUser}'`)
         updates.push('phoneNumber updated')
     }
