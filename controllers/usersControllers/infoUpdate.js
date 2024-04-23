@@ -37,7 +37,7 @@ var updateUser=async(req,res)=>{
     if(req.body.newEmail){
         if(!validator.isEmail(req.body.newEmail)) return res.status(400).json({"message":`${req.body.newEmail} is not valid email`})
    
-    const emailExist=Users.rows.find(user=>user.email==req.body.email)
+    const emailExist=Users.rows.find(user=>user.email==req.body.newEmail)
     if(emailExist) return res.status(400).json({"message":`${req.body.email} is already exist`})
         await connection_MySQL.query(`update "User" set email ='${req.body.newEmail}' where idUser='${req.params.idUser}'`)
         updates.push('email updated')
