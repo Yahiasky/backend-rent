@@ -14,9 +14,8 @@ var updateUser=async(req,res)=>{
     
     var updates=[]
     if(req.body.newUsername){
-        var Users=await connection_MySQL.query(`select * from User `)
-        const usernameExist=Users.rows.find(user=>user.username==req.body.username)
-        if(usernameExist) return res.status(400).json({"message":`${req.body.username} is already exist`})
+      
+       
         await connection_MySQL.query(`update "User" set username ='${req.body.newUsername}' where idUser='${req.params.idUser}'`)
         updates.push('username updated')
     }
