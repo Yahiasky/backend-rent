@@ -5,6 +5,7 @@ var validator=require('validator')
 var updateUser=async(req,res)=>{
     if(!req.params.idUser ) return res.status(402).json({message:'idUser missing'})
     if(!req.body.password ) return res.status(401).json({message:'password required'})
+      var Users=await connection_MySQL.query(`select * from "User" `)
     const TheUser=await connection_MySQL.query(`select * from "User" where idUser='${req.params.idUser}'`)
     console.log(TheUser.rows[0])
      if(!TheUser.rows[0]) return res.status(403).json({"message":"user not found"})
@@ -35,7 +36,7 @@ var updateUser=async(req,res)=>{
     }
     if(req.body.newEmail){
         if(!validator.isEmail(req.body.newEmail)) return res.status(400).json({"message":`${req.body.newEmail} is not valid email`})
-    var Users=await connection_MySQL.query(`select * from "User" `)
+   
     const emailExist=Users.rows.find(user=>user.email==req.body.email)
     if(emailExist) return res.status(400).json({"message":`${req.body.email} is already exist`})
         await connection_MySQL.query(`update "User" set email ='${req.body.newEmail}' where idUser='${req.params.idUser}'`)
