@@ -11,43 +11,42 @@ var getOwnerRequests=async(req,res)=>{
  var Owner=await connection_MySQL.query(`select * from "User" where idUser='${idOwner}'`)
  if(!Owner.rows) return res.status(400).json({message:'idOwner does not exist'})
 
- var OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idapartment,idrent,
+ var OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idproperty,idrent,
  title,description,rentdate,enddate
-  from rent r,apartment a where r.idapartment=a.idapartment
+  from rent r,property a where r.idproperty=a.idproperty
  and  a.idUser='${idOwner}' and status='pending' ; `)
  var OwnerRequestsFullData=[]
 
  
-for(var i =0;i<OwnerRequests.rows.length;i++){
+// for(var i =0;i<OwnerRequests.rows.length;i++){
   
-  if((new Date(OwnerRequests.rows[i].rentdate)) < (new Date())) {
-await connection_MySQL.query(`update rent set status='date passed' where idrent='${OwnerRequests.rows[i].idrent}'`)
+//   if((new Date(OwnerRequests.rows[i].rentdate)) < (new Date())) {
+// await connection_MySQL.query(`update rent set status='date passed' where idrent='${OwnerRequests.rows[i].idrent}'`)
 
- OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idapartment,idrent,
-title,description,rentdate,enddate
- from rent r,apartment a where r.idapartment=a.idapartment
- and  a.idUser='${idOwner}' and status='pending' ; `)
-  }
-
-
+//  OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idproperty,idrent,
+// title,description,rentdate,enddate
+//  from rent r,property a where r.idproperty=a.idproperty
+//  and  a.idUser='${idOwner}' and status='pending' ; `)
+//   }
 
 
- }
+
+
+//  }
 
  for(var i =0;i<OwnerRequests.rows.length;i++) {
-  var clientData=await connection_MySQL.query(`select username,contact from "User" 
+  var clientData=await connection_MySQL.query(`select username,contact,rateasclient as clientRate from "User" 
   where idUser='${OwnerRequests.rows[i].idclient}'`)
 
   const clientRate=await getClientRate(OwnerRequests.rows[i].idclient)
 
 
 
-  const PropAVG=await getPropAVG(OwnerRequests.rows[i].idapartment)
-  const pics= await connection_MySQL.query(`select pic_url from picture where idapartment='${OwnerRequests.rows[i].idapartment}'`)
+  const PropAVG=await getPropAVG(OwnerRequests.rows[i].idproperty)
+  const pics= await connection_MySQL.query(`select pic_url from picture where idproperty='${OwnerRequests.rows[i].idproperty}'`)
                                                      
   OwnerRequestsFullData.push({
    ...(clientData.rows[0]),
-   clientRate:clientRate,
    ...(OwnerRequests.rows[i]),
    PropertyRate:PropAVG,
    picture:pics.rows[0]['pic_url']
@@ -91,28 +90,28 @@ var rejectRequest=async(req,res)=>{
     if(!idClient) return   res.status(400).json({message:'idClient missing'})
     const Client=await connection_MySQL.query(`select * from "User" where idUser='${idClient}' ;`)
     if(!Client.rows[0]) return res.status(400).json({message:'idClient does not exist'})
-    var ClientRequests=await connection_MySQL.query(`select idRent,status,rent.idapartment,title,description,rentdate,enddate 
-from rent , apartment
-where rent.idapartment=apartment.idapartment and rent.idUser='${idClient}';`)
+    var ClientRequests=await connection_MySQL.query(`select idRent,status,rent.idproperty,title,description,rentdate,enddate 
+from rent , property
+where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
 
- for(var i =0;i<ClientRequests.rows.length;i++){
+//  for(var i =0;i<ClientRequests.rows.length;i++){
   
 
-  if((new Date(ClientRequests.rows[i].rentdate)) < (new Date()) && ClientRequests.rows[i].status=='pending') {
- await connection_MySQL.query(`update rent set status='date passed' where idrent='${ClientRequests.rows[i].idrent}'`)
+//   if((new Date(ClientRequests.rows[i].rentdate)) < (new Date()) && ClientRequests.rows[i].status=='pending') {
+//  await connection_MySQL.query(`update rent set status='date passed' where idrent='${ClientRequests.rows[i].idrent}'`)
    
-    }
+//     }
 
 
 
 
-  }
+//   }
    var ClientRequestsFulldata=[]
    for(var i =0;i<ClientRequests.rows.length;i++) {
     var rentReviewed=await  connection_MySQL.query(`select * from review 
     where idrent='${ClientRequests.rows[i].idrent}' and iduser='${idClient}'`)
 
- var PropAVG=await getPropAVG(ClientRequests.rows[i].idapartment)
+ var PropAVG=await getPropAVG(ClientRequests.rows[i].idproperty)
   ClientRequestsFulldata.push({...ClientRequests.rows[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0]})
 
    }

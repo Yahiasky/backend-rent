@@ -15,9 +15,9 @@ var getOwnerRate=async(UserId)=>{
 
 
    
-   var userProps=await connection_MySQL.query(`select idApartment from apartment where idUser='${UserId}'`)
+   var userProps=await connection_MySQL.query(`select idproperty from property where idUser='${UserId}'`)
 
-   userProps=userProps.rows.map(e=>e.idapartment)
+   userProps=userProps.rows.map(e=>e.idproperty)
 
    var  userPropsAVG=[]
    for(var i =0;i<userProps.length;i++) {

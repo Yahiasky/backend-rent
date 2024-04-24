@@ -7,12 +7,12 @@ const { getClientRate } = require('../../functions/getUserAVG')
 var getMCs=async(req,res)=>{
     if(!req.params.idUser) return res.status(400).json({"message":"idUser missing"})
 
-    var userProps=await connection_MySQL.query(`select idApartment from apartment where idUser='${req.params.idUser}'`)
+    var userProps=await connection_MySQL.query(`select idproperty from property where idUser='${req.params.idUser}'`)
    
     var userRents=[]
     for(var i =0;i<userProps.rows.length;i++) {
         const rentsForOneApp=await connection_MySQL.query(`select * from rent
-                                                 where idapartment='${userProps.rows[i].idapartment}' and status='approved'`)
+                                                 where idproperty='${userProps.rows[i].idproperty}' and status='approved'`)
                                                
         rentsForOneApp.rows.map(e=>userRents.push(e))
     
@@ -25,14 +25,14 @@ var getMCs=async(req,res)=>{
         
         if(rentRated.rows[0] || (new Date(userRents[i].enddate))>(new Date())) continue
   
-           const ClientData=await connection_MySQL.query(`select username,contact from "User"
+           const ClientData=await connection_MySQL.query(`select username,contact,rateasclient as clientRate from "User"
                                                     where iduser='${userRents[i].iduser}'`)
-           const clientRate=await getClientRate(userRents[i].iduser)
-           const PropsData=await connection_MySQL.query(`select title,description from apartment
-                                                    where idapartment='${userRents[i].idapartment}'`)
-           const PropAVG=await getPropAVG(userRents[i].idapartment)
+          
+           const PropsData=await connection_MySQL.query(`select title,description from property
+                                                    where idproperty='${userRents[i].idproperty}'`)
+           const PropAVG=await getPropAVG(userRents[i].idproperty)
            const pics= await connection_MySQL.query(`select pic_url from picture
-                                                    where idapartment='${userRents[i].idapartment}'`)
+                                                    where idproperty='${userRents[i].idproperty}'`)
                                         
         userRentsFullData.push({
             idRent:userRents[i].idrent,
@@ -40,7 +40,6 @@ var getMCs=async(req,res)=>{
             enddate:userRents[i].enddate,
             price:userRents[i].price,
             ...(ClientData.rows[0]),
-            clientRate:clientRate,
             ...(PropsData.rows[0]),
             PropAVG:PropAVG,
             picture:(pics.rows[0]['pic_url'])})

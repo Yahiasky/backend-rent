@@ -51,11 +51,9 @@ const Login=async (req,res)=>{
 
       connection_MySQL.query(`insert into login (refreshToken,idUser,logdate) values ('${refresh_token}','${TheUser.rows[0].iduser}','${format(new Date(),'yyyy-MM-dd  HH:mm:ss')}')`)
       res.cookie('refreshToken',refresh_token,{httpOnly:true,maxAge:24*60*60*1000,sameSite:'None',secure:true})
-      const userRateAsOwner=await getOwnerRate(TheUser.rows[0].iduser)
-      const userRateAsClient=await getClientRate(TheUser.rows[0].iduser)
       return res.json({
         "access_token":access_token,
-        "user":{...TheUser.rows[0],rateAsClient:userRateAsClient,rateAsOwner:userRateAsOwner}
+        "user":{...TheUser.rows[0]}
     
     })
 

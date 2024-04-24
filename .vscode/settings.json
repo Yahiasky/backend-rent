@@ -6,11 +6,14 @@
         "idapartment",
         "idclient",
         "idowner",
+        "idproperty",
         "idrent",
         "iduser",
         "posteddate",
+        "rateasclient",
         "rateclient",
         "rentdate",
+        "startdate",
         "wilaya"
     ]
 }

@@ -20,13 +20,11 @@ var getUsers=async (req,res)=>{
 var getUser=async(req,res)=>{
 
    
-    const rateAVG_asClient=await getClientRate(req.params.idUser)
-    const userAVG_asOwner=await getOwnerRate(req.params.idUser)
+   
 
    const data=await connection_MySQL.query(`SELECT * FROM "User" where idUser ='${req.params.idUser}' ;`)
    var FinalData=data.rows[0]
-  return FinalData==null ? res.sendStatus(204) :res.json({userData:FinalData,
-    userRateAsClient:+rateAVG_asClient, userRateAsOwner:userAVG_asOwner}
+  return FinalData==null ? res.sendStatus(204) :res.json({userData:FinalData}
    )
    
 

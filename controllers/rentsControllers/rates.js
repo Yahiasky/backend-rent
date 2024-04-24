@@ -1,5 +1,6 @@
 const connection_MySQL=require('../../MySql/connect')
 let {format}=require('date-fns')
+const { getOwnerRate, getClientRate } = require('../../functions/getUserAVG')
 
 
 var reviewRent=async(req,res)=>{
@@ -9,7 +10,7 @@ var reviewRent=async(req,res)=>{
   var text=req.body.text   || ''
 
 
-  if(!idRent || ! idClient  || ! value) return res.status(400).json({message:"missing info"})
+  if(!idRent  || ! value) return res.status(400).json({message:"missing info"})
   const Rent=await connection_MySQL.query(`select * from rent where idrent='${idRent}'`)
   if(!Rent.rows[0])  return res.status(400).json({message:"idRent does not exist"})
   var idClient=Rent.rows[0].iduser
@@ -21,6 +22,14 @@ var reviewRent=async(req,res)=>{
   await connection_MySQL.query(`insert into review (iduser,idrent,value,text) values (
           '${idClient}','${idRent}',${+value},'${text}'
 );`)
+
+ let idOwner=await connection_MySQL.query(`select iduser from property where idproperty='${Rent.rows[0].idproperty}'`)
+  idOwner =idOwner.rows[0]['iduser']
+  let ownerRate=await getOwnerRate(idOwner)
+  if(!ownerRate) return res.json({message:'review submitted'})
+  ownerRate=Number(ownerRate.toFixed(2))
+  await connection_MySQL.query(`update "User" set rateasowner=${ownerRate}`)
+ 
  return res.json({message:'review submitted'})
 }
 
@@ -33,8 +42,8 @@ var rateClient=async(req,res)=>{
   
   
     if(!idRent   || ! value) return res.status(400).json({message:"missing info"})
-    const Rent=await connection_MySQL.query(`select r.iduser as idclient,a.iduser as idowner,status,enddate from rent r,apartment a
-     where idrent='${idRent}' and r.idapartment=a.idapartment`)
+    const Rent=await connection_MySQL.query(`select r.iduser as idclient,a.iduser as idowner,status,enddate from rent r,property a
+     where idrent='${idRent}' and r.idproperty=a.idproperty`)
      var idOwner=Rent.rows[0].idowner
     if(!Rent.rows[0])  return res.status(400).json({message:"idRent does not exist"})
     if(!(Rent.rows[0].status=='approved')) return res.status(400).json({message:"cannot rate client in  unapproved rent"})
@@ -45,6 +54,11 @@ var rateClient=async(req,res)=>{
     await connection_MySQL.query(`insert into rateclient (iduser,idrent,value) values (
             '${idOwner}','${idRent}',${+value}
   );`)
+
+  let clientRate=await getClientRate(Rent.rows[0].idclient)
+  if(!clientRate) return res.json({message:'rate submitted'})
+  clientRate = Number(Number(clientRate).toFixed(2)) 
+  await connection_MySQL.query(`update "User" set rateasclient=${clientRate}`)
    return res.json({message:'rate submitted'})
   }
   
