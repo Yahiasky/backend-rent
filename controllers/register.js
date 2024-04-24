@@ -27,10 +27,9 @@ var register=async (req,res)=>{
      
     
     await connection_MySQL
-    .query(`INSERT INTO "User"(username, email, hashedPassword,joinedDate,idUser)
-     VALUES ('${req.body.name}','${req.body.email}' ,'${hashedPassword}','${format(new Date(),'yyyy-MM-dd  HH:mm:ss')}','${idUser}');`)
-     if(req.body.phoneNumber) 
-     await connection_MySQL.query(`update "User" set phoneNumber =${+req.body.phoneNumber} where idUser='${idUser}'`)
+    .query(`INSERT INTO "User"(username, email, hashedPassword,joinedDate,idUser,phoneNumber)
+     VALUES ('${req.body.name}','${req.body.email}' ,'${hashedPassword}','${format(new Date(),'yyyy-MM-dd  HH:mm:ss')}','${idUser}','${req.body.phoneNumber}');`)
+     
 
     return res.status(201).json({"message":"created"})
 
