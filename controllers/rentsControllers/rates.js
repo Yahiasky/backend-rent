@@ -7,7 +7,7 @@ var reviewRent=async(req,res)=>{
 
   var idRent=req.body.idRent
   var value=req.body.value
-  var text=req.body.text   || ''
+  
 
 
   if(!idRent  || ! value) return res.status(400).json({message:"missing info"})
@@ -19,9 +19,8 @@ var reviewRent=async(req,res)=>{
   if((new Date())< rentEndDate) return res.status(400).json({message:"cannot review  rent before end date"})
   const reviewExist=await connection_MySQL.query(`select * from review where idrent='${idRent}' and iduser='${idClient}'`)
   if(reviewExist.rows[0]) return res.status(400).json({message:" already reviewed this rent"})
-  await connection_MySQL.query(`insert into review (iduser,idrent,value,text) values (
-          '${idClient}','${idRent}',${+value},'${text}'
-);`)
+  await connection_MySQL.query(`insert into review (iduser,idrent,value) values (
+          '${idClient}','${idRent}',${+value});`)
 
  let idOwner=await connection_MySQL.query(`select iduser from property where idproperty='${Rent.rows[0].idproperty}'`)
   idOwner =idOwner.rows[0]['iduser']

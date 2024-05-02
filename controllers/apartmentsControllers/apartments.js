@@ -60,9 +60,9 @@ var idApp=require('crypto').randomBytes(10).toString('hex').toUpperCase()
 if(!HouseCategories.includes(req.body.HouseType)) return res.status(402).json({message:`HouseType should be in ${HouseCategories.join('/')}` })
 
 
-await   connection_MySQL.query(`insert into property (idproperty,iduser,title,description,Address,Wilaya,price,category,BedsNumber,posteddate,parking_spot,wifi) 
+await   connection_MySQL.query(`insert into property (idproperty,iduser,title,description,Address,Wilaya,price,category,BedsNumber,parking_spot,wifi) 
 values ('${idApp}','${req.params.idUser}','${req.body.title || "no title"}','${req.body.Description || "no description"}','${req.body.Address}','${+req.body.Wilaya}',
-'${req.body.Amount || "0$"}','${req.body.HouseType }','${+req.body.BedsNumber || 1}','${format(new Date(),'yyyy-MM-dd  HH:mm:ss')}' ,'${req.body.parkingSpot || 'no'}'
+'${req.body.Amount || "0$"}','${req.body.HouseType }','${+req.body.BedsNumber || 1}','${req.body.parkingSpot || 'no'}'
 ,'${req.body.wifi || 'no'}');`)
 
 await connection_MySQL
