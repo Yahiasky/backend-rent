@@ -7,7 +7,7 @@ var getClientRate=async(UserId)=>{
 
     const clientRate=await connection_MySQL.query(`SELECT AVG(value) FROM rateClient,rent 
     where rent.idUser ='${UserId}'
-     and rateClient.idRent=rent.idRent  and status='approved' ;`)
+     and rateClient.idRent=rent.idRent   ;`)
 
      return clientRate.rows[0].avg;
 }

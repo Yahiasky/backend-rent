@@ -12,7 +12,7 @@ var getMCs=async(req,res)=>{
     var userRents=[]
     for(var i =0;i<userProps.rows.length;i++) {
         const rentsForOneApp=await connection_MySQL.query(`select * from rent
-                                                 where idproperty='${userProps.rows[i].idproperty}' and status='approved'`)
+                                                 where idproperty='${userProps.rows[i].idproperty}' `)
                                                
         rentsForOneApp.rows.map(e=>userRents.push(e))
     

@@ -8,6 +8,7 @@
         "idowner",
         "idproperty",
         "idrent",
+        "idrequest",
         "iduser",
         "posteddate",
         "rateasclient",
