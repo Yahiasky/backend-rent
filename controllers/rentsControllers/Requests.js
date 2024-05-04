@@ -71,12 +71,13 @@ var approveRequest=async(req,res)=>{
    if(!idRequest) return   res.status(400).json({message:'idRequest missing'})
    const Request=await connection_MySQL.query(`select * from request where idrequest='${idRequest}' `)
    if(!Request.rows[0]) return res.status(400).json({message:'idRequest does not exist'})
-   console.log(Request.rows[0])
-   await connection_MySQL.query(`insert into rent (idrent,iduser,rentdate,idproperty,enddate) values (
+
+   await connection_MySQL.query(`insert into rent (idrent,iduser,rentdate,idproperty,enddate,price) values (
   '${require('crypto').randomBytes(10).toString('hex').toUpperCase()}','${Request.rows[0].iduser}'
-  ,'${Request.rows[0].rentdate}','${Request.rows[0].idproperty}','${Request.rows[0].enddate}'
-  
+  ,'${Request.rows[0].rentdate}','${Request.rows[0].idproperty}','${Request.rows[0].enddate}','${Request.rows[0].price}'
+
    );`)
+
    await connection_MySQL.query(`delete from request where idrequest='${idRequest}'`)
  return res.status(200).json({message:'rent approved , make sure you contact the client '})
 
@@ -85,8 +86,13 @@ var approveRequest=async(req,res)=>{
 var rejectRequest=async(req,res)=>{
     var idRequest=req.params.idRent
     if(!idRequest) return   res.status(400).json({message:'idRent missing'})
-    const Rent=await connection_MySQL.query(`select * from request where idrequest='${idRequest}' `)
-    if(!Rent.rows[0]) return res.status(400).json({message:'idrent does not exist or the rent is not pending'})
+    const Request=await connection_MySQL.query(`select * from request where idrequest='${idRequest}' `)
+    if(!Request.rows[0]) return res.status(400).json({message:'idrent does not exist or the rent is not pending'})
+      await connection_MySQL.query(`insert into rent (idrent,iduser,rentdate,idproperty,enddate,price,status) values (
+         '${require('crypto').randomBytes(10).toString('hex').toUpperCase()}','${Request.rows[0].iduser}'
+         ,'${Request.rows[0].rentdate}','${Request.rows[0].idproperty}','${Request.rows[0].enddate}','${Request.rows[0].price}'
+       ,'rejected'
+          );`)
     await connection_MySQL.query(`delete from request where idrequest='${idRequest}'`)
   return res.status(200).json({message:'rent rejected  '})
  
@@ -97,10 +103,12 @@ var rejectRequest=async(req,res)=>{
     if(!idClient) return   res.status(400).json({message:'idClient missing'})
     const Client=await connection_MySQL.query(`select * from "User" where idUser='${idClient}' ;`)
     if(!Client.rows[0]) return res.status(400).json({message:'idClient does not exist'})
-    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,rentdate,enddate 
+    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,rentdate,enddate ,status
 from rent , property
 where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
-   var ClientRequests=await connection_MySQL.query(`select * from request where iduser='${idClient}'`)
+   var ClientRequests=await connection_MySQL.query(`select idrequest as idrent,request.idproperty,title,description,rentdate,enddate 
+   from request , property
+   where request.idproperty=property.idproperty and request.idUser='${idClient}';`)
 
 //  for(var i =0;i<ClientRequests.rows.length;i++){
   
@@ -114,16 +122,31 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
 
 
 //   }
-   var ClientRequestsFulldata=[]
-   for(var i =0;i<ClientRents.rows.length;i++) {
-    var rentReviewed=await  connection_MySQL.query(`select * from review 
-    where idrent='${ClientRents.rows[i].idrent}' and iduser='${idClient}'`)
 
- var PropAVG=await getPropAVG(ClientRents.rows[i].idproperty)
-  ClientRequestsFulldata.push({...ClientRents.rows[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0]})
+   var result=[]
+    ClientRequests.rows.map(e=>{
+      result.push({
+         ...e,
+         status:'pending'
+      })
+    })
+
+    ClientRents.rows.map(e=>{
+      result.push(
+      e
+      )
+    })
+    console.log(result)
+   var ClientRequestsFulldata=[]
+   for(var i =0;i<result.length;i++) {
+    var rentReviewed=await  connection_MySQL.query(`select * from review 
+    where idrent='${result[i].idrent}' and iduser='${idClient}'`)
+
+ var PropAVG=await getPropAVG(result[i].idproperty)
+  ClientRequestsFulldata.push({...result[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0]})
 
    }
-  return res.status(200).json({rents:ClientRequestsFulldata,requests:ClientRequests.rows})
+  return res.status(200).json(ClientRequestsFulldata)
  
  }
 

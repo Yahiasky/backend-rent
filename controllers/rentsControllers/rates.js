@@ -42,7 +42,7 @@ var rateClient=async(req,res)=>{
   
     if(!idRent   || ! value) return res.status(400).json({message:"missing info"})
     const Rent=await connection_MySQL.query(`select r.iduser as idclient,a.iduser as idowner,status,enddate from rent r,property a
-     where idrent='${idRent}' and r.idproperty=a.idproperty`)
+     where idrent='${idRent}' and r.idproperty=a.idproperty and status='approved'`)
      var idOwner=Rent.rows[0].idowner
     if(!Rent.rows[0])  return res.status(400).json({message:"idRent does not exist"})
    

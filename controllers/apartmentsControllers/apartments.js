@@ -11,7 +11,7 @@ var getPropsById=async(req,res)=>{
     let FinalData=[]
 
     const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
-    from rent where idproperty='${data.rows[0].idproperty}' and status='approved'; `)
+    from rent where idproperty='${data.rows[0].idproperty}' ; `)
     const PropAVG=await getPropAVG(data.rows[0].idproperty)
     const pics= await getPropPics(data.rows[0].idproperty)
      FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics),bookDates:bookDates.rows})
@@ -113,6 +113,11 @@ var updates=[]
     where idproperty='${req.params.idProperty}'`)
      updates.push('Description updated')
    }
+   if(req.body.newPicture) {
+    await connection_MySQL.query(`update picture set pic_url ='${req.body.newPicture}'
+    where idproperty='${req.params.idProperty}'`)
+     updates.push('picture updated')
+   }
    if(req.body.newAddress) {
     await connection_MySQL.query(`update property set address ='${req.body.newAddress}'
     where idproperty='${req.params.idProperty}'`)
@@ -149,10 +154,10 @@ var updates=[]
 
 
    const newProp=await connection_MySQL.query(`select * from property where idproperty='${req.params.idProperty}'`)
-   
+   const newPic=await connection_MySQL.query(`select pic_url from picture where idproperty='${req.params.idProperty}'`)
     var updatesToString=updates.join('/')
     const PropAvg=await getPropAVG(req.params.idProperty)
-   return res.status(200).json({message:updatesToString,newProp:{...newProp.rows[0],avg:PropAvg}})
+   return res.status(200).json({message:updatesToString,newProp:{...newProp.rows[0],avg:PropAvg,picture:newPic.rows[0]["pic_url"]}})
  
     
     
