@@ -25,7 +25,7 @@ if( (new Date(rent.rentdate))<=endDate &&  (new Date(rent.enddate))>=endDate ) p
 })
 if(propertyRanted) return res.status(400).json({message:"Property are not available in all  this period "})
 await connection_MySQL.query(`insert into request (idrequest,iduser,rentdate,enddate,idproperty,price) values(
-    '${idRent}','${req.body.idClient}','${startDate}','${endDate}','${req.body.idProperty}','${price}'
+    '${idRent}','${req.body.idClient}','${req.body.startDate}','${req.body.endDate}','${req.body.idProperty}','${price}'
 );`)
 
 return res.json({message:'request submitted'})
