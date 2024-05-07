@@ -12,8 +12,8 @@ if(!property.rows[0]) return res.status(400).json({message:"Property does not ex
 var idRent=require('crypto').randomBytes(10).toString('hex').toUpperCase()
 console.log(property.rows[0].price)
 var price=property.rows[0].price
-const startDate=  (new Date(req.body.startDate))|| format(new Date(),'yyyy-MM-dd  HH:mm:ss')
-const endDate= (new Date(req.body.endDate))|| format(new Date()+1,'yyyy-MM-dd  HH:mm:ss')
+const startDate=  new Date(req.body.startDate)
+const endDate= new Date(req.body.endDate)
 const propertyRents=await connection_MySQL.query(`select * from rent where idproperty='${req.body.idProperty}' and status='approved'`)
 var propertyRanted=false
 propertyRents.rows.map(rent=>{
