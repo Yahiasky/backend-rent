@@ -29,7 +29,7 @@ var getPropsById=async(req,res)=>{
 
 
 var getPropsByUserId=async(req,res)=>{
-    const data=await connection_MySQL.query(`SELECT * FROM property where iduser ='${req.params.idUser}' ;`)
+    const data=await connection_MySQL.query(`SELECT * FROM property where iduser ='${req.params.idUser}' and availability!='deleted' ;`)
     
     let FinalData=[]
     for(var i =0;i<data.rows.length;i++) {
@@ -178,7 +178,7 @@ var updates=[]
     }
 var deleteProp=async(req,res)=>{
     if(!req.params.idProperty ) return res.status(402).json({message:'idProperty missing'})
-    await connection_MySQL.query(`delete   FROM  property  WHERE idproperty='${req.params.idProperty}' `)
+    await connection_MySQL.query(`update property set availability='deleted'  WHERE idproperty='${req.params.idProperty}' `)
    return res.sendStatus(200)
 }
 module.exports={addApartment,getPropsById,getPropsByUserId,editApartment,deleteProp}
