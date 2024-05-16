@@ -11,6 +11,7 @@
         "idrequest",
         "iduser",
         "posteddate",
+        "profilepictureurl",
         "rateasclient",
         "rateclient",
         "rentdate",

@@ -29,7 +29,11 @@ var register=async (req,res)=>{
     await connection_MySQL
     .query(`INSERT INTO "User"(username, email, hashedPassword,joinedDate,idUser,phoneNumber)
      VALUES ('${req.body.name}','${req.body.email}' ,'${hashedPassword}','${format(new Date(),'yyyy-MM-dd  HH:mm:ss')}','${idUser}','${req.body.phoneNumber}');`)
-     
+   
+     if(req.body.profilePictureUrl){
+      await connection_MySQL.query(`update "User" set profilepictureurl ='${req.body.profilePictureUrl}' where idUser='${idUser}'`)
+      updates.push('profilePictureUrl updated')
+  }
 
     return res.status(201).json({"message":"created"})
 
