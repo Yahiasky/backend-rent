@@ -32,7 +32,7 @@ var register=async (req,res)=>{
    
      if(req.body.profilePictureUrl){
       await connection_MySQL.query(`update "User" set profilepictureurl ='${req.body.profilePictureUrl}' where idUser='${idUser}'`)
-      updates.push('profilePictureUrl updated')
+      
   }
 
     return res.status(201).json({"message":"created"})
