@@ -129,7 +129,7 @@ var updates=[]
      updates.push('Amount updated')
    }
    if(req.body.newWilaya) {
-    await connection_MySQL.query(`update property set wilaya ='${req.body.newWilaya}'
+    await connection_MySQL.query(`update property set wilaya =${+req.body.newWilaya}
     where idproperty='${req.params.idProperty}'`)
      updates.push('Wilaya updated')
    }
