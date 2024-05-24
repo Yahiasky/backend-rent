@@ -7,7 +7,7 @@ var HouseCategories=['Dortoir','Bungalow','villa','apartment']
 
 var getPropsById=async(req,res)=>{
     const data=await connection_MySQL.query(`SELECT * FROM property where idproperty ='${req.params.idProperty}' ;`)
-    
+    if(!data.rows[0]) return res.json({message:'no data'})
     let FinalData=[]
 
     const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
@@ -30,7 +30,7 @@ var getPropsById=async(req,res)=>{
 
 var getPropsByUserId=async(req,res)=>{
     const data=await connection_MySQL.query(`SELECT * FROM property where iduser ='${req.params.idUser}' and availability!='deleted' ;`)
-    
+    if(!data.rows[0]) return res.json({message:'no data'})
     let FinalData=[]
     for(var i =0;i<data.rows.length;i++) {
         const PropAVG=await getPropAVG(data.rows[i].idproperty)
