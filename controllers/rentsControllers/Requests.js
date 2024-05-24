@@ -113,8 +113,13 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
 //  for(var i =0;i<ClientRequests.rows.length;i++){
   
 
-//   if((new Date(ClientRequests.rows[i].rentdate)) < (new Date()) && ClientRequests.rows[i].status=='pending') {
-//  await connection_MySQL.query(`update rent set status='date passed' where idrent='${ClientRequests.rows[i].idrent}'`)
+//   if((new Date(ClientRequests.rows[i].rentdate)) < (new Date()) ) {
+//  await connection_MySQL.query(`delete from request where idrequest='${ClientRequests.rows[i].idrent}'`)
+//  await connection_MySQL.query(`insert into rent (idrent,iduser,rentdate,idproperty,enddate,price,status) values (
+//    '${require('crypto').randomBytes(10).toString('hex').toUpperCase()}','${ClientRequests.rows[i].iduser}'
+//    ,'${ClientRequests.rows[i].rentdate}','${ClientRequests.rows[i].idproperty}','${ClientRequests.rows[i].enddate}','${ClientRequests.rows[i].price}'
+//  ,'date passed'
+//     );`)
    
 //     }
 
