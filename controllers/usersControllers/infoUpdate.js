@@ -34,6 +34,10 @@ var updateUser=async(req,res)=>{
         await connection_MySQL.query(`update "User" set birthDate ='${req.body.birthDate}' where idUser='${req.params.idUser}'`)
         updates.push('birthDate updated')
     }
+    if(req.body.contact){
+        await connection_MySQL.query(`update "User" set contact ='${req.body.contact}' where idUser='${req.params.idUser}'`)
+        updates.push('contact updated')
+    }
     if(req.body.profilePictureUrl){
         await connection_MySQL.query(`update "User" set profilepictureurl ='${req.body.profilePictureUrl}' where idUser='${req.params.idUser}'`)
         updates.push('profilePictureUrl updated')

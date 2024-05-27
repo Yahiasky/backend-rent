@@ -6,7 +6,8 @@ var HouseCategories=['Dortoir','Bungalow','villa','apartment']
 
 
 var getPropsById=async(req,res)=>{
-    const data=await connection_MySQL.query(`SELECT * FROM property where idproperty ='${req.params.idProperty}' ;`)
+    const data=await connection_MySQL.query(`SELECT p.*,U.contact FROM property p,"User" U where U.iduser=p.iduser and
+    p.idproperty ='${req.params.idProperty}' ;`)
     if(!data.rows[0]) return res.json({message:'no data'})
     let FinalData=[]
 

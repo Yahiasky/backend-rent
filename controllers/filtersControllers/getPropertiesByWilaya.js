@@ -1,11 +1,14 @@
 const connection_MySQL=require('../../MySql/connect')
 const getPropAVG = require('../../functions/getPropAVG')
 const getPropPics = require('../../functions/getPropPictures')
+const sendEmail = require('../../functions/sendEmail')
 
 
 
 var getPropsByWilaya=async(req,res)=>{
-    const data=await connection_MySQL.query(`SELECT * FROM property p where p.wilaya =${req.params.wilaya} and p.availability='available' ;`)
+  try {
+    const data=await connection_MySQL.query(`SELECT p.*,U.contact FROM property p,"User" U where U.iduser=p.iduser and
+    p.wilaya =${req.params.wilaya} and p.availability='available' ;`)
 
 
     let FinalData=[]
@@ -20,6 +23,10 @@ var getPropsByWilaya=async(req,res)=>{
        }
    
    return !FinalData ? res.sendStatus(204) :res.json(FinalData)
+  } catch (error) {
+    console.log(error)
+  }
+   
   
 
 
