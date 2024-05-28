@@ -3,6 +3,7 @@ let {format}=require('date-fns')
 const getPropAVG = require('../../functions/getPropAVG')
 const { getClientRate } = require('../../functions/getUserAVG')
 const { request } = require('http')
+const getPropPics = require('../../functions/getPropPictures')
 
 
 var getOwnerRequests=async(req,res)=>{
@@ -110,6 +111,7 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
    from request , property
    where request.idproperty=property.idproperty and request.idUser='${idClient}';`)
 
+
 //  for(var i =0;i<ClientRequests.rows.length;i++){
   
 
@@ -141,15 +143,16 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
       e
       )
     })
-    console.log(result)
+    
    var ClientRequestsFulldata=[]
    for(var i =0;i<result.length;i++) {
     var rentReviewed=await  connection_MySQL.query(`select * from review 
     where idrent='${result[i].idrent}' and iduser='${idClient}'`)
 
  var PropAVG=await getPropAVG(result[i].idproperty)
-  ClientRequestsFulldata.push({...result[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0]})
-
+ var picture=await getPropPics(result[i].idproperty)
+  ClientRequestsFulldata.push({...result[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0] || {},Picture:picture})
+  console.log(rentReviewed.rows[0])
    }
   return res.status(200).json(ClientRequestsFulldata)
  
