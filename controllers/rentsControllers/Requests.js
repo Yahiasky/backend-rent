@@ -45,13 +45,13 @@ var getOwnerRequests=async(req,res)=>{
 
 
   const PropAVG=await getPropAVG(OwnerRequests.rows[i].idproperty)
-  const pics= await connection_MySQL.query(`select pic_url from picture where idproperty='${OwnerRequests.rows[i].idproperty}'`)
+  const pics=await getPropPics(OwnerRequests.rows[i].idproperty)
                                                      
   OwnerRequestsFullData.push({
    ...(clientData.rows[0]),
    ...(OwnerRequests.rows[i]),
    PropertyRate:PropAVG,
-   picture:pics.rows[0]['pic_url']
+   picture:pics,profilepictureurl:Owner.rows[0].profilepictureurl
 
 
   })

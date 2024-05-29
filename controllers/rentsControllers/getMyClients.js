@@ -25,7 +25,7 @@ var getMCs=async(req,res)=>{
         
         if(rentRated.rows[0] || (new Date(userRents[i].enddate))>(new Date())) continue
   
-           const ClientData=await connection_MySQL.query(`select username,contact,rateasclient as clientRate from "User"
+           const ClientData=await connection_MySQL.query(`select username,profilepictureurl,contact,rateasclient as clientRate from "User"
                                                     where iduser='${userRents[i].iduser}'`)
           
            const PropsData=await connection_MySQL.query(`select title,description from property
