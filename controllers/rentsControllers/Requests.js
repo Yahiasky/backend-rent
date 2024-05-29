@@ -11,7 +11,7 @@ var getOwnerRequests=async(req,res)=>{
  var idOwner= req.params.idOwner
  if(!idOwner) return res.status(400).json({message:'idOwner missing'})
  var Owner=await connection_MySQL.query(`select * from "User" where idUser='${idOwner}'`)
- if(!Owner.rows) return res.status(400).json({message:'idOwner does not exist'})
+ if(!Owner.rows[0]) return res.status(400).json({message:'idOwner does not exist'})
 
  var OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idproperty,idrequest as idrent,
  title,description,rentdate,enddate

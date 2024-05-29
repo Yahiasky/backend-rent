@@ -55,7 +55,8 @@ var addApartment=async(req,res)=>{
 if(!req.params.idUser) return res.status(400).json({"message":"idUser missing"})
 
 
-
+  const User=await connection_MySQL.query(`select * from "User" where idUser='${req.params.idUser}' ;`)
+  if(!User.rows[0]) return res.status(400).json({message:'idUser does not exist'})
 
 var idApp=require('crypto').randomBytes(10).toString('hex').toUpperCase()
 if(!HouseCategories.includes(req.body.HouseType)) return res.status(402).json({message:`HouseType should be in ${HouseCategories.join('/')}` })

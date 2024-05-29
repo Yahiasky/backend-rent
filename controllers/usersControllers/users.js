@@ -32,9 +32,12 @@ var getUser=async(req,res)=>{
 
 
 var deleteUser=async(req,res)=>{
- 
-   await connection_MySQL.query(`delete   FROM  apartment  WHERE idUser ='${req.params.idUser}' `)
-   await connection_MySQL.query(`delete   FROM User WHERE "User".idUser ='${req.params.idUser}' `)
+   await connection_MySQL.query(`update property set availability='deleted'  WHERE idUser ='${req.params.idUser}' `)
+   await connection_MySQL.query(`update property set idUser=null  WHERE idUser ='${req.params.idUser}' `)
+   await connection_MySQL.query(`update rent set idUser=null  WHERE idUser ='${req.params.idUser}' `)
+   await connection_MySQL.query(`update rateclient set idUser=null  WHERE idUser ='${req.params.idUser}' `)
+   await connection_MySQL.query(`update review set idUser=null  WHERE idUser ='${req.params.idUser}' `)
+   await connection_MySQL.query(`delete   FROM "User" WHERE "User".idUser ='${req.params.idUser}' `)
 
      res.json({
         "message":"deleted !"
