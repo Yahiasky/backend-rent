@@ -5,6 +5,7 @@ const { getClientRate } = require('../../functions/getUserAVG')
 
 
 var getMCs=async(req,res)=>{
+  
     if(!req.params.idUser) return res.status(400).json({"message":"idUser missing"})
 
     var userProps=await connection_MySQL.query(`select idproperty from property where idUser='${req.params.idUser}'`)

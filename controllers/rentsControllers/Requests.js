@@ -104,10 +104,10 @@ var rejectRequest=async(req,res)=>{
     if(!idClient) return   res.status(400).json({message:'idClient missing'})
     const Client=await connection_MySQL.query(`select * from "User" where idUser='${idClient}' ;`)
     if(!Client.rows[0]) return res.status(400).json({message:'idClient does not exist'})
-    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,rentdate,enddate ,status
+    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,rentdate,enddate ,status,property.iduser as idowner
 from rent , property
 where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
-   var ClientRequests=await connection_MySQL.query(`select idrequest as idrent,request.idproperty,title,description,rentdate,enddate 
+   var ClientRequests=await connection_MySQL.query(`select idrequest as idrent,property.iduser as idowner,request.idproperty,title,description,rentdate,enddate 
    from request , property
    where request.idproperty=property.idproperty and request.idUser='${idClient}';`)
 
@@ -131,18 +131,33 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
 //   }
 
    var result=[]
-    ClientRequests.rows.map(e=>{
+   for(var i =0;i<ClientRequests.rows.length;i++){
+      let profilepictureurl=await connection_MySQL.query(`select profilepictureurl from "User" where idUser='${ClientRequests.rows[i].idowner}' ;`)
       result.push({
-         ...e,
-         status:'pending'
-      })
-    })
+         ...ClientRequests.rows[i],
+         status:'pending',profilepictureurl:profilepictureurl.rows[0]["profilepictureurl"]
+      }) 
+   }
+   //  ClientRequests.rows.map(e=>{
+      
+   //    result.push({
+   //       ...e,
+   //       status:'pending'
+   //    })
+   //  })
 
-    ClientRents.rows.map(e=>{
-      result.push(
-      e
-      )
-    })
+   for(var i =0;i<ClientRents.rows.length;i++){
+      let profilepictureurl=await connection_MySQL.query(`select profilepictureurl from "User" where idUser='${ClientRents.rows[i].idowner}' ;`)
+      result.push({
+         ...ClientRents.rows[i],
+         profilepictureurl:profilepictureurl.rows[0]["profilepictureurl"]
+      }) 
+   }
+   //  ClientRents.rows.map(e=>{
+   //    result.push(
+   //    e
+   //    )
+   //  })
     
    var ClientRequestsFulldata=[]
    for(var i =0;i<result.length;i++) {
