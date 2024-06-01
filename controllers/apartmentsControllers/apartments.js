@@ -34,9 +34,11 @@ var getPropsByUserId=async(req,res)=>{
     if(!data.rows[0]) return res.json({message:'no data'})
     let FinalData=[]
     for(var i =0;i<data.rows.length;i++) {
+      const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
+    from rent where idproperty='${data.rows[i].idproperty}' ; `)
         const PropAVG=await getPropAVG(data.rows[i].idproperty)
         const pics= await getPropPics(data.rows[0].idproperty)
-         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics)})
+         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics),bookDates:bookDates.rows})
        
     
        }
