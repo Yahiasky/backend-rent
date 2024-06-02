@@ -29,11 +29,10 @@ var getMCs=async(req,res)=>{
            const ClientData=await connection_MySQL.query(`select username,profilepictureurl,contact,rateasclient as clientRate from "User"
                                                     where iduser='${userRents[i].iduser}'`)
           
-           const PropsData=await connection_MySQL.query(`select title,description from property
+           const PropsData=await connection_MySQL.query(`select title,description,picture from property
                                                     where idproperty='${userRents[i].idproperty}'`)
            const PropAVG=await getPropAVG(userRents[i].idproperty)
-           const pics= await connection_MySQL.query(`select pic_url from picture
-                                                    where idproperty='${userRents[i].idproperty}'`)
+           
                                         
         userRentsFullData.push({
             idRent:userRents[i].idrent,
@@ -43,7 +42,7 @@ var getMCs=async(req,res)=>{
             ...(ClientData.rows[0]),
             ...(PropsData.rows[0]),
             PropAVG:PropAVG,
-            picture:(pics.rows[0]['pic_url'])})
+           })
        
           }
               

@@ -14,7 +14,7 @@ var getOwnerRequests=async(req,res)=>{
  if(!Owner.rows[0]) return res.status(400).json({message:'idOwner does not exist'})
 
  var OwnerRequests=await connection_MySQL.query(`select r.idUser as idClient,a.idproperty,idrequest as idrent,
- title,description,rentdate,enddate
+ title,description,picture,rentdate,enddate
   from request r,property a where r.idproperty=a.idproperty
  and  a.idUser='${idOwner}'  ; `)
  var OwnerRequestsFullData=[]
@@ -45,13 +45,13 @@ var getOwnerRequests=async(req,res)=>{
 
 
   const PropAVG=await getPropAVG(OwnerRequests.rows[i].idproperty)
-  const pics=await getPropPics(OwnerRequests.rows[i].idproperty)
+ 
                                                      
   OwnerRequestsFullData.push({
    ...(clientData.rows[0]),
    ...(OwnerRequests.rows[i]),
    PropertyRate:PropAVG,
-   picture:pics,profilepictureurl:Owner.rows[0].profilepictureurl
+  profilepictureurl:Owner.rows[0].profilepictureurl
 
 
   })
@@ -104,7 +104,7 @@ var rejectRequest=async(req,res)=>{
     if(!idClient) return   res.status(400).json({message:'idClient missing'})
     const Client=await connection_MySQL.query(`select * from "User" where idUser='${idClient}' ;`)
     if(!Client.rows[0]) return res.status(400).json({message:'idClient does not exist'})
-    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,rentdate,enddate ,status,property.iduser as idowner
+    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,picture,rentdate,enddate ,status,property.iduser as idowner
 from rent , property
 where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
    var ClientRequests=await connection_MySQL.query(`select idrequest as idrent,property.iduser as idowner,request.idproperty,title,description,rentdate,enddate 
@@ -165,8 +165,8 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
     where idrent='${result[i].idrent}' and iduser='${idClient}'`)
 
  var PropAVG=await getPropAVG(result[i].idproperty)
- var picture=await getPropPics(result[i].idproperty)
-  ClientRequestsFulldata.push({...result[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0] || {},Picture:picture})
+
+  ClientRequestsFulldata.push({...result[i],PropsRate:PropAVG,yourReview:rentReviewed.rows[0] || {}})
   console.log(rentReviewed.rows[0])
    }
   return res.status(200).json(ClientRequestsFulldata)
