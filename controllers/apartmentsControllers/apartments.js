@@ -14,8 +14,8 @@ var getPropsById=async(req,res)=>{
     const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
     from rent where idproperty='${data.rows[0].idproperty}' ; `)
     const PropAVG=await getPropAVG(data.rows[0].idproperty)
-    const pics= await getPropPics(data.rows[0].idproperty)
-     FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics),bookDates:bookDates.rows})
+   
+     FinalData.push({...data.rows[0],avg:+PropAVG,bookDates:bookDates.rows})
    
     
  
@@ -37,8 +37,8 @@ var getPropsByUserId=async(req,res)=>{
       const bookDates=await connection_MySQL.query(`select rentdate as startDate , enddate as endDate 
     from rent where idproperty='${data.rows[i].idproperty}' ; `)
         const PropAVG=await getPropAVG(data.rows[i].idproperty)
-        const pics= await getPropPics(data.rows[0].idproperty)
-         FinalData.push({...data.rows[0],avg:+PropAVG,picture:(pics),bookDates:bookDates.rows})
+       
+         FinalData.push({...data.rows[0],avg:+PropAVG,bookDates:bookDates.rows})
        
     
        }
@@ -64,13 +64,12 @@ var idApp=require('crypto').randomBytes(10).toString('hex').toUpperCase()
 if(!HouseCategories.includes(req.body.HouseType)) return res.status(402).json({message:`HouseType should be in ${HouseCategories.join('/')}` })
 
 
-await   connection_MySQL.query(`insert into property (idproperty,iduser,title,description,Address,Wilaya,price,category,BedsNumber,parking_spot,wifi,availability) 
+await   connection_MySQL.query(`insert into property (idproperty,iduser,title,description,Address,Wilaya,price,category,BedsNumber,parking_spot,wifi,availability,pic_url) 
 values ('${idApp}','${req.params.idUser}','${req.body.title || "no title"}','${req.body.Description || "no description"}','${req.body.Address}','${+req.body.Wilaya}',
 '${req.body.Amount || "0$"}','${req.body.HouseType }','${+req.body.BedsNumber || 1}','${req.body.parkingSpot || 'no'}'
-,'${req.body.wifi || 'no'}','available');`)
+,'${req.body.wifi || 'no'}','available','${req.body.picture}');`)
 
-await connection_MySQL
-.query(`INSERT INTO picture(pic_url, idproperty) VALUES ('${req.body.picture}','${idApp}' );`)
+
 
 return res.status(201).json({message:'done'})
 
@@ -118,7 +117,7 @@ var updates=[]
      updates.push('Description updated')
    }
    if(req.body.newPicture) {
-    await connection_MySQL.query(`update picture set pic_url ='${req.body.newPicture}'
+    await connection_MySQL.query(`update property set pic_url ='${req.body.newPicture}'
     where idproperty='${req.params.idProperty}'`)
      updates.push('picture updated')
    }
@@ -158,10 +157,10 @@ var updates=[]
 
 
    const newProp=await connection_MySQL.query(`select * from property where idproperty='${req.params.idProperty}'`)
-   const newPic=await connection_MySQL.query(`select pic_url from picture where idproperty='${req.params.idProperty}'`)
+   
     var updatesToString=updates.join('/')
     const PropAvg=await getPropAVG(req.params.idProperty)
-   return res.status(200).json({message:updatesToString,newProp:{...newProp.rows[0],avg:PropAvg,picture:newPic.rows[0]["pic_url"]}})
+   return res.status(200).json({message:updatesToString,newProp:{...newProp.rows[0],avg:PropAvg}})
  
     
     

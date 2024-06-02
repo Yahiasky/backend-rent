@@ -15,7 +15,7 @@ const connection = new Client(DATABASE_URL);
     console.log('MySQL connected');
   } catch (err) {
     sendEmail(process.env.EmailTo,'error connecting to database',`e ${err.message}`)
-    console.error("error executing query",err);
+    console.log("error executing query",err);
   }
 })();
 
