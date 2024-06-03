@@ -104,10 +104,10 @@ var rejectRequest=async(req,res)=>{
     if(!idClient) return   res.status(400).json({message:'idClient missing'})
     const Client=await connection_MySQL.query(`select * from "User" where idUser='${idClient}' ;`)
     if(!Client.rows[0]) return res.status(400).json({message:'idClient does not exist'})
-    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,description,picture,rentdate,enddate ,status,property.iduser as idowner
+    var ClientRents=await connection_MySQL.query(`select idRent,rent.idproperty,title,picture,rent.price,description,picture,rentdate,enddate ,status,property.iduser as idowner
 from rent , property
 where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
-   var ClientRequests=await connection_MySQL.query(`select idrequest as idrent,property.iduser as idowner,request.idproperty,title,description,rentdate,enddate 
+   var ClientRequests=await connection_MySQL.query(`select idrequest as idrent,property.iduser as idowner,picture,property.price,request.idproperty,title,description,rentdate,enddate 
    from request , property
    where request.idproperty=property.idproperty and request.idUser='${idClient}';`)
 
