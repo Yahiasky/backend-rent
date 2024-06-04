@@ -132,10 +132,10 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
 
    var result=[]
    for(var i =0;i<ClientRequests.rows.length;i++){
-      let profilepictureurl=await connection_MySQL.query(`select profilepictureurl from "User" where idUser='${ClientRequests.rows[i].idowner}' ;`)
+      let ownerInfo=await connection_MySQL.query(`select profilepictureurl,contact from "User" where idUser='${ClientRequests.rows[i].idowner}' ;`)
       result.push({
          ...ClientRequests.rows[i],
-         status:'pending',profilepictureurl:profilepictureurl.rows[0]["profilepictureurl"]
+         status:'pending',...ownerInfo.rows[0]
       }) 
    }
    //  ClientRequests.rows.map(e=>{
@@ -147,10 +147,10 @@ where rent.idproperty=property.idproperty and rent.idUser='${idClient}';`)
    //  })
 
    for(var i =0;i<ClientRents.rows.length;i++){
-      let profilepictureurl=await connection_MySQL.query(`select profilepictureurl from "User" where idUser='${ClientRents.rows[i].idowner}' ;`)
+      let ownerInfo=await connection_MySQL.query(`select profilepictureurl,contact from "User" where idUser='${ClientRents.rows[i].idowner}' ;`)
       result.push({
-         ...ClientRents.rows[i],
-         profilepictureurl:profilepictureurl.rows[0]["profilepictureurl"]
+         ...ClientRents.rows[i]
+         ,...ownerInfo.rows[0]
       }) 
    }
    //  ClientRents.rows.map(e=>{
