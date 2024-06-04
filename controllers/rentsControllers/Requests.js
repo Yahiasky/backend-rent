@@ -37,10 +37,10 @@ var getOwnerRequests=async(req,res)=>{
 //  }
 
  for(var i =0;i<OwnerRequests.rows.length;i++) {
-  var clientData=await connection_MySQL.query(`select username,contact,rateasclient as clientRate from "User" 
+  var clientData=await connection_MySQL.query(`select username,contact,rateasclient,profilepictureurl as clientRate from "User" 
   where idUser='${OwnerRequests.rows[i].idclient}'`)
 
-  const clientRate=await getClientRate(OwnerRequests.rows[i].idclient)
+
 
 
 
@@ -50,8 +50,8 @@ var getOwnerRequests=async(req,res)=>{
   OwnerRequestsFullData.push({
    ...(clientData.rows[0]),
    ...(OwnerRequests.rows[i]),
-   PropertyRate:PropAVG,
-  profilepictureurl:Owner.rows[0].profilepictureurl
+   PropertyRate:PropAVG
+ 
 
 
   })
