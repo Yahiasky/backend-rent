@@ -37,7 +37,7 @@ var getOwnerRequests=async(req,res)=>{
 //  }
 
  for(var i =0;i<OwnerRequests.rows.length;i++) {
-  var clientData=await connection_MySQL.query(`select username,contact,rateasclient,profilepictureurl as clientRate from "User" 
+  var clientData=await connection_MySQL.query(`select username,contact,rateasclient as clientRate,profilepictureurl from "User" 
   where idUser='${OwnerRequests.rows[i].idclient}'`)
 
 
