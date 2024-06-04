@@ -1,8 +1,11 @@
 const connection_MySQL=require('../../MySql/connect')
 let bcrypt=require('bcrypt')
 var validator=require('validator')
+const sendEmail = require('../../functions/sendEmail')
+const { EmailTo } = require('../../data/info')
 
 var updateUser=async(req,res)=>{
+    try {
     if(!req.params.idUser ) return res.status(402).json({message:'idUser missing'})
     if(!req.body.password ) return res.status(401).json({message:'password required'})
       var Users=await connection_MySQL.query(`select * from "User" `)
@@ -61,7 +64,10 @@ var updateUser=async(req,res)=>{
     const newUser=await connection_MySQL.query(`select * from "User" where idUser='${req.params.idUser}'`)
     var updatesToString=updates.join('/')
     
-   return res.status(200).json({message:updatesToString,newUser:newUser.rows[0]})
+   return res.status(200).json({message:updatesToString,newUser:newUser.rows[0]}) }
+   catch(error){
+    sendEmail(EmailTo,'info update error',error.message)
+   }
 
 }
 
