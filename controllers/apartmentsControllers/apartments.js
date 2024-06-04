@@ -38,7 +38,7 @@ var getPropsByUserId=async(req,res)=>{
     from rent where idproperty='${data.rows[i].idproperty}' ; `)
         const PropAVG=await getPropAVG(data.rows[i].idproperty)
        
-         FinalData.push({...data.rows[0],avg:+PropAVG,bookDates:bookDates.rows})
+         FinalData.push({...data.rows[i],avg:+PropAVG,bookDates:bookDates.rows})
        
     
        }
