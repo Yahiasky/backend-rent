@@ -12,7 +12,7 @@ var getPropsById=async(req,res)=>{
     let FinalData=[]
 
     const bookDates=await connection.query(`select rentdate as startDate , enddate as endDate 
-    from rent where idproperty='${data.rows[0].idproperty}' ; `)
+    from rent where idproperty='${data.rows[0].idproperty}' and status='approved' ; `)
     const PropAVG=await getPropAVG(data.rows[0].idproperty)
    
      FinalData.push({...data.rows[0],avg:+PropAVG,bookDates:bookDates.rows})
@@ -35,7 +35,7 @@ var getPropsByUserId=async(req,res)=>{
     let FinalData=[]
     for(var i =0;i<data.rows.length;i++) {
       const bookDates=await connection.query(`select rentdate as startDate , enddate as endDate 
-    from rent where idproperty='${data.rows[i].idproperty}' ; `)
+    from rent where idproperty='${data.rows[i].idproperty}' and status='approved' ; `)
         const PropAVG=await getPropAVG(data.rows[i].idproperty)
        
          FinalData.push({...data.rows[i],avg:+PropAVG,bookDates:bookDates.rows})

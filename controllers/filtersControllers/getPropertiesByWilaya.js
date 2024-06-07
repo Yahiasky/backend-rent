@@ -16,7 +16,7 @@ var getPropsByWilaya=async(req,res)=>{
     let FinalData=[]
     for(var i =0;i<data.rows.length;i++) {
         const bookDates=await connection.query(`select rentdate as startDate , enddate as endDate 
-        from rent where idproperty='${data.rows[i].idproperty}' ; `)
+        from rent where idproperty='${data.rows[i].idproperty}' and status='approved' ; `)
         const PropAVG=await getPropAVG(data.rows[i].idproperty)
        
          FinalData.push({...data.rows[i],avg:+PropAVG,bookDates:bookDates.rows})
