@@ -1,18 +1,18 @@
-const connection_MySQL=require('../../MySql/connect')
+const connection=require('../../Database/connect')
 
 const getPropAVG = require('../../functions/getPropAVG')
-const { getClientRate } = require('../../functions/getUserAVG')
+
 
 
 var getMCs=async(req,res)=>{
   
     if(!req.params.idUser) return res.status(400).json({"message":"idUser missing"})
 
-    var userProps=await connection_MySQL.query(`select idproperty from property where idUser='${req.params.idUser}'`)
+    var userProps=await connection.query(`select idproperty from property where idUser='${req.params.idUser}'`)
    
     var userRents=[]
     for(var i =0;i<userProps.rows.length;i++) {
-        const rentsForOneApp=await connection_MySQL.query(`select * from rent
+        const rentsForOneApp=await connection.query(`select * from rent
                                                  where idproperty='${userProps.rows[i].idproperty}' and status='approved' `)
                                                
         rentsForOneApp.rows.map(e=>userRents.push(e))
@@ -22,14 +22,14 @@ var getMCs=async(req,res)=>{
 
     var userRentsFullData=[]
     for(var i =0;i<userRents.length;i++) {
-        const rentRated=await connection_MySQL.query(`select * from rateclient where idrent='${userRents[i].idrent}'`)
+        const rentRated=await connection.query(`select * from rateclient where idrent='${userRents[i].idrent}'`)
         
         if(rentRated.rows[0] || (new Date(userRents[i].enddate))>(new Date())) continue
   
-           const ClientData=await connection_MySQL.query(`select username,profilepictureurl,contact,rateasclient as clientRate from "User"
+           const ClientData=await connection.query(`select username,profilepictureurl,contact,rateasclient as clientRate from "User"
                                                     where iduser='${userRents[i].iduser}'`)
           
-           const PropsData=await connection_MySQL.query(`select title,description,picture from property
+           const PropsData=await connection.query(`select title,description,picture from property
                                                     where idproperty='${userRents[i].idproperty}'`)
            const PropAVG=await getPropAVG(userRents[i].idproperty)
            

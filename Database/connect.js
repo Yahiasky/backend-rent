@@ -12,7 +12,7 @@ const connection = new Client(DATABASE_URL);
  
   try {
      await connection.connect();
-    console.log('MySQL connected');
+    console.log('Database connected');
   } catch (err) {
     sendEmail(process.env.EmailTo,'error connecting to database',`e ${err.message}`)
     console.log("error executing query",err);

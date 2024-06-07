@@ -1,4 +1,4 @@
-const connection_MySQL=require('../../MySql/connect')
+const connection=require('../../Database/connect')
 var {log} =require('../../functions/log')
 
 
@@ -13,7 +13,7 @@ var getClientHistory=async(req,res)=>{
 
    
 
-   const[ data]=await connection_MySQL.query(`SELECT  event,eventDate FROM clienthistory where idUser ='${req.params.idUser}'  ;`)
+   const[ data]=await connection.query(`SELECT  event,eventDate FROM clienthistory where idUser ='${req.params.idUser}'  ;`)
  
 
 

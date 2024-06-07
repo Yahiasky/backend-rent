@@ -6,8 +6,9 @@ const switchNumbers = require('../../functions/switchNumbers')
 
 
 
-var getPropsByWilaya=async(req,res)=>{
-
+var getRecommendation=async(req,res)=>{
+  var maxData=req.body.maxData || 20
+  var minData=req.body.minData || 0
   try {
     const data=await connection.query(`SELECT p.*,U.contact FROM property p,"User" U where U.iduser=p.iduser and
     p.wilaya =${req.params.wilaya} and p.availability='available' ;`)
@@ -23,8 +24,19 @@ var getPropsByWilaya=async(req,res)=>{
        
     
        }
-       FinalData=sortArrayByAttribute(FinalData,"avg")
-   return !FinalData ? res.sendStatus(204) :res.json(FinalData)
+
+      var CoFinalData=[]
+      FinalData=sortArrayByAttribute(FinalData,"avg")
+      if(minData>maxData) switchNumbers(minData,maxData)
+      if(minData>=FinalData.length) minData=FinalData.length-1
+      
+      
+       for(var i =minData;i<maxData;i++) {
+        if(i>=FinalData.length) break
+        CoFinalData.push(FinalData[i])
+    
+       }
+   return !FinalData ? res.sendStatus(204) :res.json(CoFinalData)
   } catch (error) {
     console.log(error)
   }
@@ -33,4 +45,4 @@ var getPropsByWilaya=async(req,res)=>{
 
 
 }
-module.exports={getPropsByWilaya}
+module.exports={getRecommendation}

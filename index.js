@@ -5,11 +5,11 @@ require('dotenv').config()
 let express=require('express')
 let app=express()
 let credentials=require('./config/credentials')
-const connection_MySQL=require('./MySql/connect')
+
 const path=require('path')
 const cors=require('cors')
 const corsOptions=require('./config/corsOptions')
-const verifyJwt=require('./verifyJWT.js')
+
 let bodyParser=require('body-parser');
 let cookieParser=require('cookie-parser')
 const { PORT, EmailTo } = require('./data/info.js')
@@ -55,12 +55,12 @@ app.use((req,res,next)=>{
  app.use('/',require('./routes/root.js'))
 app.use('/login',require('./routes/APIs/Login.js'))
 app.use('/register',require('./routes/APIs/register.js'))
-app.use('/logout',require('./routes/APIs/logout.js'))
-
-// app.use('/AccessToken',require('./routes/APIs/AccessToken.js'))
 
 
-// app.use(verifyJwt)
+
+
+
+
 
 app.use('/users',require('./routes/APIs/users.js'))
 app.use('/apartments',require('./routes/APIs/apartments.js'))

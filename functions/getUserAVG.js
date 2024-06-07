@@ -1,11 +1,11 @@
-const connection_MySQL=require('../MySql/connect');
+const connection=require('../Database/connect');
 const getPropAVG = require('./getPropAVG');
 const average = require('./maths');
 
 var getClientRate=async(UserId)=>{
 
 
-    const clientRate=await connection_MySQL.query(`SELECT AVG(value) FROM rateClient,rent 
+    const clientRate=await connection.query(`SELECT AVG(value) FROM rateClient,rent 
     where rent.idUser ='${UserId}'
      and rateClient.idRent=rent.idRent   ;`)
 
@@ -15,7 +15,7 @@ var getOwnerRate=async(UserId)=>{
 
 
    
-   var userProps=await connection_MySQL.query(`select idproperty from property where idUser='${UserId}'`)
+   var userProps=await connection.query(`select idproperty from property where idUser='${UserId}'`)
 
    userProps=userProps.rows.map(e=>e.idproperty)
 
