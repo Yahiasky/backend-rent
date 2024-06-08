@@ -117,7 +117,7 @@ var updates=[]
      updates.push('Description updated')
    }
    if(req.body.newPicture) {
-    await connection.query(`update property set pic_url ='${req.body.newPicture}'
+    await connection.query(`update property set picture ='${req.body.newPicture}'
     where idproperty='${req.params.idProperty}'`)
      updates.push('picture updated')
    }
